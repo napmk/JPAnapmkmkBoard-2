@@ -26,6 +26,9 @@
 			<td th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd hh:mm')}"></td>
 		</tr>
 	</table>
+	<div>
+		<a class="btn btn-primary my-2" th:href="@{/question_form}">질문등록</a>
+	</div>
  </div>  
 </body>
 </html>

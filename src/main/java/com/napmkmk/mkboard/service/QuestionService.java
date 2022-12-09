@@ -1,5 +1,6 @@
 package com.napmkmk.mkboard.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.napmkmk.mkboard.dto.QuestionDto;
+import com.napmkmk.mkboard.entity.Answer;
 import com.napmkmk.mkboard.entity.Question;
 import com.napmkmk.mkboard.exception.DataNotFoundException;
 import com.napmkmk.mkboard.repository.AnswerRepository;
@@ -70,7 +72,22 @@ public class QuestionService {
 		 }
 
 
+		 
+	 }
+	 
+	 public void questionCreate(String subject, String content) {
+		 
+		 
+		 List<Question> optOptional = questionRepository.findBySubjectAndContent(subject, content);
+ 
+		 Question question2 = new Question();
+		 question2.setContent(content);
+		 question2.setSubject(subject);
+		 question2.setCreateDate(LocalDateTime.now());
+		 
 	
+		 questionRepository.save(question2);
+		
 	 }
 
 }

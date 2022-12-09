@@ -83,4 +83,22 @@ public class MainController {
 		return String.format("redirect:/questionView/%s", id); //파라미터값넘겨주기
 	}
 	
+	@RequestMapping(value = "/question_form")
+	public String questionCreate (){ 
+		
+	
+		
+		
+		return "question_form"; //파라미터값넘겨주기
+	}
+	
+	
+	@RequestMapping(value = "/questionCreateOk")
+	public String questionCreateOk (@RequestParam String subject, @RequestParam String content){ 
+		
+		questionService.questionCreate(subject, content);  
+		
+		
+		return "redirect:list"; 
+	}
 }
