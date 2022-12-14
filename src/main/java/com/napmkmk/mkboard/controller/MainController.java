@@ -148,4 +148,9 @@ public class MainController {
 		return "redirect:list"; 
 	}
 	
+	@RequestMapping(value = "/login")
+	public String login() {
+		
+		return "login_form";
+	}
 }

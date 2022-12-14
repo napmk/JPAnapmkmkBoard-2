@@ -16,7 +16,7 @@ public class SecurityConfig {
 
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests().requestMatchers(
+		http.authorizeHttpRequests().requestMatchers(	
 				
 				new AntPathRequestMatcher("/**")).permitAll()
 			.and()//h2콘솔 서버 막히는거 풀어주기
@@ -24,7 +24,14 @@ public class SecurityConfig {
 						new AntPathRequestMatcher("/h2-console/**")) 
 			.and()//h2 DB 표시 해제
 			.headers()
-			.addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN));
+			.addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
+		
+			//로그인 로그아웃 설정
+		
+			.and()
+				.formLogin()
+				.loginPage("/login") //로그인페이지가 보이게 하는 요청
+				.defaultSuccessUrl("/index");// 로그인 성공시 이동할 요청
 	
 				
 				return http.build();
@@ -32,6 +39,11 @@ public class SecurityConfig {
 		
 	}
 	
+	private HttpSecurity and() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	@Bean
 	PasswordEncoder passwordEncoder() { //암호화 해주기 여기서 미리 해놓을수 있음
 		
