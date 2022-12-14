@@ -2,15 +2,21 @@ package com.napmkmk.mkboard.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.napmkmk.mkboard.dto.AnswerForm;
 import com.napmkmk.mkboard.dto.QuestionDto;
+import com.napmkmk.mkboard.dto.QuestionForm;
 import com.napmkmk.mkboard.entity.Question;
 import com.napmkmk.mkboard.repository.AnswerRepository;
 import com.napmkmk.mkboard.repository.QuestionRepository;
@@ -66,7 +72,7 @@ public class MainController {
 	
 	//리스트 뷰페이지
 	@RequestMapping( value = "/questionView/{id}") //타임리프 방법
-	public String questionView(Model model, @PathVariable("id")Integer id) { //글번호 메개변수 id로 들어 온다
+	public String questionView(Model model, @PathVariable("id")Integer id , AnswerForm answerForm) { //글번호 메개변수 id로 들어 온다
 		
 		QuestionDto question= questionService.getQuestion(id);
 		model.addAttribute("question", question);
@@ -74,29 +80,36 @@ public class MainController {
 		return "question_View";
 	}
 	
-	@RequestMapping(value = "/answerCreate/{id}")
-	public String answerCreate(@PathVariable("id")Integer id, @RequestParam String content) { //번호 랑 리퀘스트파람 가져오기 //27?와 content=+답변등록
+	//답변페이지
+	@PostMapping(value = "/answerCreate/{id}")
+	public String answerCreate(Model model,@PathVariable("id")Integer id, @Valid AnswerForm answerForm, BindingResult bindingResult ) { //번호 랑 리퀘스트파람 가져오기 //27?와 content=+답변등록
 		
-		answerService.answerCreate(content, id);
+		QuestionDto questionDto = questionService.getQuestion(id); //원글의 내용
+		
+		if(bindingResult.hasErrors()) {
+			model.addAttribute("question" ,questionDto);  //원글가져와라.
+			return "question_view"; //원글을 다시받고 에러도 찍고.
+		}
+		answerService.answerCreate(answerForm.getContent(), id);
 		
 		
-		return String.format("redirect:/questionView/%s", id); //파라미터값넘겨주기
+		return String.format("redirect:/questionView/%s", id); //파라미터값넘겨주기 에러가 전달이 안되므로
 	}
 	
 	@RequestMapping(value = "/question_form")
-	public String questionCreate (){ 
-		
-	
-		
+	public String questionCreate (QuestionForm questionForm){ 
 		
 		return "question_form"; //파라미터값넘겨주기
 	}
 	
 	
-	@RequestMapping(value = "/questionCreateOk")
-	public String questionCreateOk (@RequestParam String subject, @RequestParam String content){ 
+	@PostMapping(value = "/questionCreate") //postMapping  post일때 사용하기
+	public String questionCreateOk (@Valid QuestionForm questionForm, BindingResult bindingResult){ //QuestionForm안(subject, content)에 있는 벨리데이션을 체크 걸리면에러발생 
 		
-		questionService.questionCreate(subject, content);  
+		if(bindingResult.hasErrors()) {
+			return "question_form";
+		}
+		questionService.questionCreate(questionForm.getSubject(), questionForm.getContent());  
 		
 		
 		return "redirect:list"; 

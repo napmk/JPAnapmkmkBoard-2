@@ -13,7 +13,7 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
 
 	
 	public List<Question>findBySubjectLike(String subject);
-	   //제목에 특정 낱말이 포함되어 있는 글 찾기
+	 //제목에 특정 낱말이 포함되어 있는 글 찾기
 	
 	
 	public List<Question> findBySubjectOrderByIdDesc(String subject); 

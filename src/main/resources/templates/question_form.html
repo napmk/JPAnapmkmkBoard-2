@@ -10,30 +10,25 @@
    		<div style="text-align: center">
 			<h2 >질문하기</h2>
 		</div>
-   		<form th:action="@{/questionCreateOk}">
-   		
-   		<div class="mb-3">
-			  <label for="exampleFormControlInput1" class="form-label">제목</label>
-			  <input type="text" class="form-control" name="subject" id="exampleFormControlInput1" placeholder="제목을 입력해주세요">
-		</div>
-		<div class="mb-3">
-			  <label for="exampleFormControlTextarea1" class="form-label">질문내용</label>
-			  <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"  name="content" placeholder="내용을 입력해주세요"></textarea>
-		</div>
-		<input type="submit" value="저장하기" class="btn btn-primary">
-		<input type="text" value="취소" class="btn btn-secondary" onclick="window.open('list')" style="width:90px">
+   		<form th:action="@{/questionCreate}" method="post" th:object="${questionForm}">
+   			<!-- 경고창 -->
+   			<div>
+   				<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+   					<div th:each="err:${#fields.allErrors()}" th:text="${err}"></div>
+   				</div>
+   			</div>
+   			<!-- //경고창 -->
+	   		<div class="mb-3">
+				  <label for="exampleFormControlInput1" class="form-label">제목</label>
+				  <input type="text" class="form-control" name="subject" id="exampleFormControlInput1" placeholder="제목을 입력해주세요" th:field="*{subject}">
+			</div>
+			<div class="mb-3">
+				  <label for="exampleFormControlTextarea1" class="form-label">질문내용</label>
+				  <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"  name="content" placeholder="내용을 입력해주세요" th:field="*{content}"></textarea>
+			</div>
+			<input type="submit" value="저장하기" class="btn btn-primary">
+			<input type="text" value="취소" class="btn btn-secondary" onclick="window.open('list')" style="width:90px">
 
-	<!-- 
-   			<div>
-   				<label>제목</label>
-   				
-   				<input type="text" name="subject">
-   			</div>
-   			<div>
-   				<label>질문내용</label>
-   				<textarea rows="10" name="content"></textarea>
-   			</div>
-   		 -->	
    		</form>
    </div>
 </body>

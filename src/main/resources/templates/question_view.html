@@ -21,6 +21,8 @@
 		   </div>
 		</div>
 	   <!-- //질문내용 끝 -->
+
+   			
 	   <!-- 답변개수 출력 -->
 	    	<h5 class="border-bottom my-3 py2" th:text="|${#lists.size(question.answers)}개의 답변이 있습니다.|"></h5><!-- #lists 함수 -->
 	   <!-- //답변개수 출력끝 -->
@@ -34,12 +36,20 @@
 			   		</div>
 			 </div>	
 	   </div>
-	   
 	   <!-- //답변내용반복끝 -->
+	   
+	   <form th:action="@{|/answerCreate/${question.id}|}" method="post" class="my-3" th:object="${answerForm}">
+	   <!-- 답변검사 에러표시 경고창 -->
+   		<div>
+   			<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+   				<div th:each="err:${#fields.allErrors()}" th:text="${err}"></div>
+   			</div>
+		</div>
+   	   <!-- //답변검사 에러표시 경고창  -->
 	   <!-- 답변내용작성 -->
-	   <form th:action="@{|/answerCreate/${question.id}|}" method="get" class="my-3">
-	   		<textarea rows="10" cols="60" name="content" id="content" class="form-control"> </textarea><br>
-	   		<input type="submit" value="답변등록" id="answer_submit" class="btn btn-primary">
+	   
+	   		<textarea rows="10" cols="60" name="content" id="content" class="form-control" th:field="*{content}"> </textarea><br>
+	   		<input type="submit" value="답변등록" id="answer_submit" class="btn btn-primary" >
 	   </form>
 	   <!-- //답변내용작성 -->
 	</div>   

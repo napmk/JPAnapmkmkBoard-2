@@ -78,7 +78,7 @@ public class QuestionService {
 	 public void questionCreate(String subject, String content) {
 		 
 		 
-		 List<Question> optOptional = questionRepository.findBySubjectAndContent(subject, content);
+		// List<Question> optOptional = questionRepository.findBySubjectAndContent(subject, content);
  
 		 Question question2 = new Question();
 		 question2.setContent(content);
