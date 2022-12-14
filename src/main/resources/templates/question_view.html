@@ -6,6 +6,12 @@
 <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
 </head>
 <body>
+<nav class="navbar bg-light">
+	  <div class="container-fluid">
+	    <a class="navbar-brand" href="/index">Napmkmk QnA Board</a>
+	    <a  href="">로그인</a>
+	  </div>
+</nav>
 	<div class="container my-3">
 		<!-- 질문내용 보기 -->
 	   <h2 class="board-bottom py-2" th:text="${question.subject}"></h2>
