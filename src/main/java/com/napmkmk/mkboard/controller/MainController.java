@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,12 +16,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.napmkmk.mkboard.dto.AnswerForm;
+import com.napmkmk.mkboard.dto.MemberForm;
 import com.napmkmk.mkboard.dto.QuestionDto;
 import com.napmkmk.mkboard.dto.QuestionForm;
 import com.napmkmk.mkboard.entity.Question;
 import com.napmkmk.mkboard.repository.AnswerRepository;
 import com.napmkmk.mkboard.repository.QuestionRepository;
 import com.napmkmk.mkboard.service.AnswerService;
+import com.napmkmk.mkboard.service.MemberService;
 import com.napmkmk.mkboard.service.QuestionService;
 
 import lombok.RequiredArgsConstructor;
@@ -42,6 +45,7 @@ public class MainController {
 	
 	private final QuestionService questionService;
 	private final AnswerService answerService;
+	private final MemberService memberService;
 	
 	@RequestMapping(value = "/")
 //	@ResponseBody //본문에 아래 들어가 있는 텍스트 출력됨
@@ -60,12 +64,14 @@ public class MainController {
 	}
 	//리스트페이지
 	@RequestMapping(value = "/list")
-	public String list(Model model) {
+	public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) { //스프링부트는 페이징 첫페이지 0
 		
 		//List<Question> questionList = questionRepository.findAll(); 서비스 사용하려고 주석처리
-		List<QuestionDto> questionList = questionService.getQuestionList();
+		//List<QuestionDto> questionList = questionService.getQuestionList();
 	
-		model.addAttribute("questionList",questionList);
+		Page<Question> paging = questionService.getList(page);// 페이지를 만들어서 넣어주자
+		
+		model.addAttribute("paging",paging);
 		
 		return "question_List";
 	}
@@ -114,4 +120,32 @@ public class MainController {
 		
 		return "redirect:list"; 
 	}
+	
+	@RequestMapping(value = "/join")
+	public String join(MemberForm memberForm){ 
+		
+		return "join_form"; 
+	}
+	
+	
+	@PostMapping(value = "/joinOk") //postMapping  post일때 사용하기
+	public String joinOk (@Valid MemberForm memberForm, BindingResult bindingResult){ //MemberForm안(subject, content)에 있는 벨리데이션을 체크 걸리면에러발생 
+		
+		
+		
+		
+		if(bindingResult.hasErrors()) {
+			return "join_form";
+		}
+		
+		try {
+		memberService.memberCreate(memberForm.getUsername(), memberForm.getPassword(), memberForm.getEmail());  
+		}catch(Exception e){   //아이디 가입 에러 사유
+			e.printStackTrace();
+			bindingResult.reject("joinFail","이미 등록된 아이디 입니다.");
+			return "join_form";
+		}
+		return "redirect:list"; 
+	}
+	
 }

@@ -7,6 +7,10 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -24,6 +28,19 @@ import lombok.RequiredArgsConstructor;
 public class QuestionService {
 	private final QuestionRepository questionRepository;
 	private final AnswerRepository answerRepository;
+	
+	public Page<Question> getList(int page){
+		
+		List<Sort.Order> sort = new ArrayList<>();
+		
+		sort.add(Sort.Order.desc("id"));
+		
+		Pageable pageable = PageRequest.of(page, 10, Sort.by(sort)); //페이지당 표시되는 글 개수
+		
+		Page<Question> pages = questionRepository.findAll(pageable);
+		return pages;
+	}
+	
 	
 	public List<QuestionDto> getQuestionList() {
 		List<Question> questionList = questionRepository.findAll();

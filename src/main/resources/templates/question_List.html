@@ -9,12 +9,21 @@
 <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
 </head>
 <body>
-<nav class="navbar bg-light">
-	  <div class="container-fluid">
-	    <a class="navbar-brand" href="/index">Napmkmk QnA Board</a>
-	    <a  href="">로그인</a>
-	  </div>
-</nav>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+     <div class="container-fluid">
+       <a class="navbar-brand" href="/index">질문-답변 공개게시판</a>       
+       <div class="collapse navbar-collapse">
+       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+             <a class="nav-link" href="#">로그인</a>
+          </li>
+          <li class="nav-item">
+             <a class="nav-link" th:href="@{/join}">회원가입</a>
+          </li>
+       </ul>
+       </div>
+     </div>
+    </nav> 
 	
 <div style="text-align: center">
 	<h2 >질문답변 게시판</h2>
@@ -28,14 +37,35 @@
 				<th>등록일</th>
 			</tr>
 		<thead>
-		<tr th:each="question:${questionList}">
+		<tr th:each="question:${paging}">
 			<td th:text="${question.id}"></td>
 			<td>
 				<a th:href="@{|/questionView/${question.id}|}" th:text="${question.subject}"></a>
+				<span th:if="${#lists.size(question.answerList) > 0}"
+				      th:text="'('+ ${#lists.size(question.answerList)} +')'" ></span>
 			</td>
 			<td th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd hh:mm')}"></td>
 		</tr>
 	</table>
+	<!-- 페이징 -->
+		<div th:if="${!paging.isEmpty()}">
+		  <ul class="pagination justify-content-center">
+		    <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
+		    	<a class="page-link" th:href="@{|?page=${paging.number-1}|}">이전</a>
+		    </li>
+		    
+		    <li class="page-item" th:each="page:${#numbers.sequence(0, paging.totalPages-1)}" 
+		    th:if="${page >= paging.number-5 and page <=paging.number+5}"
+		    th:classappend="${page==paging.number} ? 'active'">
+		    	<a class="page-link" th:href="@{|?page=${page}|}" th:text="${page+1}"></a>
+		    </li>
+		    
+		    <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
+		    	<a class="page-link" href="@{|?page=${paging.number+1}|}">다음</a>
+		    </li>
+		  </ul>
+		</div>
+	<!-- //페이징 -->
 	<div>
 		<a class="btn btn-primary my-2" th:href="@{/question_form}">질문등록</a>
 	</div>

@@ -2,6 +2,8 @@ package com.napmkmk.mkboard.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.napmkmk.mkboard.entity.Question;
@@ -20,8 +22,9 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
 	//제목과 정확히 모두 일치하는 글찾은후 아이디 내림차순으로 정렬하여 반환
 
 
-
-	public List<Question> findBySubjectAndContent(String subject, String content);
-	//제목과 컨텐츠 입력하기
+//	public List<Question> findBySubjectAndContent(String subject, String content);
+//	//제목과 컨텐츠 입력하기
 	
+	public Page<Question> findAll(Pageable pageable);
+
 }

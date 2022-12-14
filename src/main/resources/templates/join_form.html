@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>질문하기</title>
+<title>회원가입</title>
 <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
 </head>
 <body>
@@ -21,11 +21,11 @@
        </div>
      </div>
     </nav> 
-   <div class="container my-3">
+	<div class="container my-3">
    		<div style="text-align: center">
-			<h2 >질문하기</h2>
+			<h2>회원가입</h2>
 		</div>
-   		<form th:action="@{/questionCreate}" method="post" th:object="${questionForm}">
+   		<form th:action="@{/joinOk}" method="post" th:object="${memberForm}">
    			<!-- 경고창 -->
    			<div>
    				<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
@@ -34,17 +34,23 @@
    			</div>
    			<!-- //경고창 -->
 	   		<div class="mb-3">
-				  <label for="exampleFormControlInput1" class="form-label">제목</label>
-				  <input type="text" class="form-control" name="subject" id="exampleFormControlInput1" placeholder="제목을 입력해주세요" th:field="*{subject}">
+				  <label class="form-label">사용자 ID</label>
+				  <input type="text" class="form-control" name="username" placeholder="사용자 ID를 입력해주세요" th:field="*{username}">
 			</div>
 			<div class="mb-3">
-				  <label for="exampleFormControlTextarea1" class="form-label">질문내용</label>
-				  <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"  name="content" placeholder="내용을 입력해주세요" th:field="*{content}"></textarea>
+				  <label class="form-label">비밀번호</label>
+				  <input type="password" class="form-control" name="password" placeholder="비밀번호를 입력해주세요" th:field="*{password}">
 			</div>
-			<input type="submit" value="저장하기" class="btn btn-primary">
+			<div class="mb-3">
+				  <label class="form-label">이메일</label>
+				  <input type="text" class="form-control" name="email" placeholder="이메일주소를 입력해주세요" th:field="*{email}">
+			</div>
+			
+			<input type="submit" value="회원가입" class="btn btn-primary">
 			<input type="text" value="취소" class="btn btn-secondary" onclick="window.open('list')" style="width:90px">
 
    		</form>
    </div>
+   
 </body>
 </html>
