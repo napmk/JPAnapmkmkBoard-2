@@ -2,6 +2,7 @@ package com.napmkmk.mkboard.entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -32,4 +33,13 @@ public class Question {
 	
 	@OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE) //Answer의 private Question question; 뒤에 가져옴
 	private List<Answer> answerList;//1:n구조 java.util.List
+	
+	
+	@ManyToOne
+	private SiteMember writer;//글쓴이
+	
+	private LocalDateTime modifyDate; // 수정한 데이터
+	
+	@ManyToMany //다대다 관계일 때 새로운 qustion_liker테이블이 생성되고 , 필드값은 각 테이블의 기본키가 된다.
+	private Set<SiteMember> liker; //좋아요 누른 아이디 (Set집합 중복을 허락하지 않아요.)
 }

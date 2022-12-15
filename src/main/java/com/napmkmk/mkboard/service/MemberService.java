@@ -1,10 +1,13 @@
 package com.napmkmk.mkboard.service;
 
+import java.util.Optional;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.napmkmk.mkboard.entity.SiteMember;
+import com.napmkmk.mkboard.exception.DataNotFoundException;
 import com.napmkmk.mkboard.repository.MemberRepository;
 
 
@@ -35,5 +38,15 @@ public class MemberService {
 		
 	}
 	
+	public SiteMember getMemberInfo(String username) {
+		Optional<SiteMember> optSiteMember =  memberRepository.findByUsername(username);
+		
+		if(optSiteMember.isPresent()) {
+			SiteMember siteMember = optSiteMember.get();
+			return siteMember;
+		}else {
+			throw new DataNotFoundException("유저를 찾을 수 없습니다.");
+		}
+	}
 	
 }

@@ -1,5 +1,6 @@
 package com.napmkmk.mkboard.service;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import org.springframework.ui.Model;
 import com.napmkmk.mkboard.dto.QuestionDto;
 import com.napmkmk.mkboard.entity.Answer;
 import com.napmkmk.mkboard.entity.Question;
+import com.napmkmk.mkboard.entity.SiteMember;
 import com.napmkmk.mkboard.exception.DataNotFoundException;
 import com.napmkmk.mkboard.repository.AnswerRepository;
 import com.napmkmk.mkboard.repository.QuestionRepository;
@@ -28,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class QuestionService {
 	private final QuestionRepository questionRepository;
 	private final AnswerRepository answerRepository;
+	private final MemberService memberService;
 	
 	public Page<Question> getList(int page){
 		
@@ -42,7 +45,7 @@ public class QuestionService {
 	}
 	
 	
-	public List<QuestionDto> getQuestionList() {
+	public List<Question> getQuestionList() {
 		List<Question> questionList = questionRepository.findAll();
 		
 		
@@ -62,27 +65,28 @@ public class QuestionService {
 		}
 		
 	
-		return questionDtos;
+		return questionList;
 		
 		
 	}
 	
 	//글 클릭당 글 하나보기
-	 public QuestionDto getQuestion(Integer id) {
+	 public Question getQuestion(Integer id) {
 		 
-		 QuestionDto questionDto = new QuestionDto();
+		 //QuestionDto questionDto = new QuestionDto();
 		 
 		 Optional<Question> optquestion = questionRepository.findById(id);
 		 if(optquestion.isPresent()) {
 			Question question = optquestion.get();
 			
-			questionDto.setId(question.getId());
-			questionDto.setContent(question.getContent());
-			questionDto.setSubject(question.getSubject());
-			questionDto.setAnswers(question.getAnswerList());
-			questionDto.setCreateDate(question.getCreateDate());
+//			questionDto.setId(question.getId());
+//			questionDto.setContent(question.getContent());
+//			questionDto.setSubject(question.getSubject());
+//			questionDto.setAnswers(question.getAnswerList());
+//			questionDto.setCreateDate(question.getCreateDate());
+//			
+			return question;
 			
-			return questionDto;
 		 }else{
 			 throw new DataNotFoundException("해당 질문이 없습니다.");
 			 
@@ -92,19 +96,36 @@ public class QuestionService {
 		 
 	 }
 	 
-	 public void questionCreate(String subject, String content) {
+	 public void questionCreate(String subject, String content ,String username) {
 		 
 		 
 		// List<Question> optOptional = questionRepository.findBySubjectAndContent(subject, content);
- 
-		 Question question2 = new Question();
-		 question2.setContent(content);
-		 question2.setSubject(subject);
-		 question2.setCreateDate(LocalDateTime.now());
 		 
+		 SiteMember siteMember = memberService.getMemberInfo(username);
+		 
+		 Question question = new Question();
+		 question.setContent(content);
+		 question.setSubject(subject);
+		 question.setCreateDate(LocalDateTime.now());
+		 question.setWriter(siteMember);
 	
-		 questionRepository.save(question2);
+		 questionRepository.save(question);
 		
+	 }
+	 
+	 public void modify(String subject, String content, Question question) {
+		
+		 question.setSubject(subject);
+         question.setContent(content);
+         question.setModifyDate(LocalDateTime.now()); //수정시간을 지금 현재시간으로 셋팅
+         
+         questionRepository.save(question);
+	 }
+	 
+	 public void delete(Integer Id) {
+		 
+		 questionRepository.deleteById(Id);
+		 
 	 }
 
 }

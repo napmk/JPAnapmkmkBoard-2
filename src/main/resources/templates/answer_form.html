@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>질문하기</title>
+<title>답변 수정</title>
 <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
 </head>
 <body>
@@ -20,26 +20,18 @@
        </ul>
        </div>
      </div>
-    </nav> 
-   <div class="container my-3">
+    </nav>
+    
+      <div class="container my-3">
    		<div style="text-align: center">
-			<h2 >질문하기</h2>
+			<h2 >답변수정하기</h2>
 		</div>
-   		<form  method="post" th:object="${questionForm}">
+   		<form  method="post" th:object="${answerForm}">
    			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-   			<!-- 경고창 -->
-   			<div>
-   				<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
-   					<div th:each="err:${#fields.allErrors()}" th:text="${err}"></div>
-   				</div>
-   			</div>
-   			<!-- //경고창 -->
-	   		<div class="mb-3">
-				  <label for="exampleFormControlInput1" class="form-label">제목</label>
-				  <input type="text" class="form-control" name="subject" id="exampleFormControlInput1" placeholder="제목을 입력해주세요" th:field="*{subject}">
-			</div>
+   			
+	   		
 			<div class="mb-3">
-				  <label for="exampleFormControlTextarea1" class="form-label">질문내용</label>
+				  <label for="exampleFormControlTextarea1" class="form-label">답변내용</label>
 				  <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"  name="content" placeholder="내용을 입력해주세요" th:field="*{content}"></textarea>
 			</div>
 			<input type="submit" value="저장하기" class="btn btn-primary">

@@ -15,7 +15,8 @@
        <div class="collapse navbar-collapse">
        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link" th:href="@{/login}">로그인</a>
+            <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/login}">로그인</a>
+            <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a>
           </li>
           <li class="nav-item">
              <a class="nav-link" th:href="@{/join}">회원가입</a>
@@ -34,6 +35,7 @@
 			<tr>
 				<th>번호</th>
 				<th>제목</th>
+				<th>글쓴이</th>
 				<th>등록일</th>
 			</tr>
 		<thead>
@@ -44,6 +46,11 @@
 				<span th:if="${#lists.size(question.answerList) > 0}"
 				      th:text="'('+ ${#lists.size(question.answerList)} +')'" ></span>
 			</td>
+			
+			<td>
+				<span th:text="${question.writer.username}"></span>
+			</td>
+			
 			<td th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd hh:mm')}"></td>
 		</tr>
 	</table>
@@ -55,7 +62,7 @@
 		    </li>
 		    
 		    <li class="page-item" th:each="page:${#numbers.sequence(0, paging.totalPages-1)}" 
-		    th:if="${page >= paging.number-5 and page <=paging.number+5}"
+		    th:if="${page >= paging.number-3 and page <=paging.number+3}"
 		    th:classappend="${page==paging.number} ? 'active'">
 		    	<a class="page-link" th:href="@{|?page=${page}|}" th:text="${page+1}"></a>
 		    </li>
@@ -67,7 +74,7 @@
 		</div>
 	<!-- //페이징 -->
 	<div>
-		<a class="btn btn-primary my-2" th:href="@{/question_form}">질문등록</a>
+		<a class="btn btn-primary my-2" th:href="@{/questionCreate}">질문등록</a>
 	</div>
  </div>  
 </body>
