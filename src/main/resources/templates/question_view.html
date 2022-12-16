@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
 <meta charset="UTF-8">
 <title>질문 내용 보기</title>
@@ -12,10 +13,11 @@
        <div class="collapse navbar-collapse">
        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-             <a class="nav-link" th:href="@{/login}">로그인</a>
+            <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/login}">로그인</a>
+            <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a>
           </li>
           <li class="nav-item">
-             <a class="nav-link" th:href="@{/join}">회원가입</a>
+             <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/join}">회원가입</a>
           </li>
        </ul>
        </div>
@@ -35,8 +37,14 @@
 			   		</div>
 			   	</div>
 			   	<div class="my-3">
-			   		<a th:href="@{|/modify/${question.id}|}" th:text="수정" class="btn btn-primary my-2"></a>
-			   		<a th:href="@{|/delete/${question.id}|}" th:text="삭제" class="btn btn-secondary my-2"></a>
+			   		<a th:href="@{|/modify/${question.id}|}" th:text="수정"  class="btn btn-primary my-2" sec:authorize="isAuthenticated()" th:if="${question.writer != null and #authentication.getPrincipal().getUsername() == question.writer.username}"></a>
+			   		<a th:href="@{|/delete/${question.id}|}" th:text="삭제" class="btn btn-secondary my-2" sec:authorize="isAuthenticated()" th:if="${question.writer != null and #authentication.getPrincipal().getUsername() == question.writer.username}"></a>
+			   		<a th:href="@{|/questionLike/${question.id}|}"  class="btn btn-primary my-2">
+			   			좋아요<span class="badge text-bg-secondary" th:text="${#lists.size(question.liker)}">4</span>
+			   		</a>
+			   	
+
+			   		
 			   	</div>	
 		   </div>
 		</div>
@@ -63,8 +71,12 @@
 			   		</div>
 		 </div>	
 		<div class="my-3">
-			   		<a th:href="@{|/answerModify/${answer.id}|}" th:text="수정" class="btn btn-primary my-2"></a>
-			   		<a th:href="@{|/answerDelete/${answer.id}|}" th:text="삭제" class="btn btn-secondary my-2"></a>
+			   		<a th:href="@{|/answerModify/${answer.id}|}" th:text="수정" class="btn btn-primary my-2" sec:authorize="isAuthenticated()"></a>
+			   		<a th:href="@{|/answerDelete/${answer.id}|}" th:text="삭제" class="btn btn-secondary my-2" sec:authorize="isAuthenticated()"></a>
+			   		<a th:href="@{|/answerLike/${answer.id}|}"  class="btn btn-primary my-2">
+			   			좋아요<span class="badge text-bg-secondary" th:text="${#lists.size(answer.liker)}">4</span>
+			   		</a>
+			   	
 		</div>	
 	   </div>
 	   <!-- //답변내용반복끝 -->

@@ -26,6 +26,7 @@ import com.napmkmk.mkboard.dto.QuestionDto;
 import com.napmkmk.mkboard.dto.QuestionForm;
 import com.napmkmk.mkboard.entity.Answer;
 import com.napmkmk.mkboard.entity.Question;
+import com.napmkmk.mkboard.entity.SiteMember;
 import com.napmkmk.mkboard.repository.AnswerRepository;
 import com.napmkmk.mkboard.repository.QuestionRepository;
 import com.napmkmk.mkboard.service.AnswerService;
@@ -269,6 +270,36 @@ public class MainController {
 		
 		
 		return String.format("redirect:/questionView/%s", answer.getQuestion().getId()); 
+	}
+	
+	@PreAuthorize("isAuthenticated")//로그아웃했을때 글 남기면 오류처리 막아줌
+	@GetMapping(value = "/questionLike/{id}")
+	public String questionLike(@PathVariable("id") Integer Id,  Principal principal) {
+		
+		Question question = questionService.getQuestion(Id);
+		
+		SiteMember siteMember =  memberService.getMemberInfo(principal.getName());
+		
+		questionService.questionLike(question, siteMember);
+		
+		return String.format("redirect:/questionView/%s", Id); 
+		
+	}
+	
+	@PreAuthorize("isAuthenticated")//로그아웃했을때 글 남기면 오류처리 막아줌
+	@GetMapping(value = "/answerLike/{id}")
+	public String answerLike(@PathVariable("id") Integer Id,  Principal principal) {
+		
+		Answer answer = answerService.getAnswer(Id);
+		
+		
+		SiteMember siteMember =  memberService.getMemberInfo(principal.getName());
+		
+		answerService.answerLike(answer, siteMember);
+		
+		
+		return String.format("redirect:/questionView/%s",  answer.getQuestion().getId()); 
+		
 	}
 	
 }
